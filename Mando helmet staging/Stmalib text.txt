@@ -1,0 +1,6 @@
+Brim: YES
+If possible, could you add a cylinder support blocker?:
+ -Position XYZ: 0, -7, 15 mm
+ -Size XYZ: 95, 30, 30 mm
+Layer thickness:  0.15mm or otherwise smallest possible
+Thank you!
