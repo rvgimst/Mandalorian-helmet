@@ -51,8 +51,9 @@ unsigned long lastTimeButtonStateChanged = 0;
 enum { btnNone, btnSingleClick, btnDoubleClick, btnLongPress };
 
 DFPlayerMini_Fast myMP3; // our mp3 player
-byte folderCnt[5] = {0, 5, 8, 108, 1}; // hard coded for now
+byte folderCnt[5] = {0, 5, 8, 103, 1}; // hard coded for now, Mando: {0, 5, 8, 108, 1} StarWarsGeneric: {0, 5, 8, 103, 1}
 String folderName[5] = {"root", "intros", "soundbites", "oneliners", "theme"};
+byte soundLastPlayed[5] = {0, 0, 0, 0, 0}; // keep track of which sound was last played per folder (to prevent playing same sounds)
 byte oneLinerCycle = 5; // after this number of one-liners we play a soundbite
 int lastTypePlaying = 0; // FOLDER_INTRO | FOLDER_SOUNDBITES | FOLDER_ONELINERS
 unsigned long lastTimePlayStart = 0; // time when last sound was started - for LED duration
@@ -108,9 +109,21 @@ void setup() {
   delay(2000);
 }
 
+// prevents same sound being played twice
+long RandomDifferentFromPrevious(int folder) {
+  long retval;
+
+  if (folderCnt[folder] <= 1) return 0; // prevent endless loop
+
+  while ((retval = random(folderCnt[folder])) == soundLastPlayed[folder]);
+  Serial.println((String)"folder="+folder+" random="+retval+" prev="+soundLastPlayed[folder]); 
+  soundLastPlayed[folder] = retval;
+  return retval;
+}
+
 void playFromFolder(int folder) {
   mandoState = STATE_SOUND;
-  int playTrack = random(folderCnt[folder])+1;
+  int playTrack = RandomDifferentFromPrevious(folder)+1;
   lastTypePlaying = folder;
   lastTimePlayStart = millis();
   // Serial.println((String)myMP3.numTracksInFolder(folder)+" tracks found in folder "+folder+" ("+folderName[folder]+")");
