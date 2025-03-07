@@ -1,7 +1,7 @@
 #include "DFPlayerMini_Fast.h"
 #include <FastLED.h>
 
-#define NUM_LEDS 44 
+#define NUM_LEDS 45 // Kjell:44 Fred:45
 #define DATA_PIN A0
 #define LED_TYPE WS2811
 #define COLOR_ORDER GRB
